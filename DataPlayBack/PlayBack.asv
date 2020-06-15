@@ -1,0 +1,41 @@
+
+%Setup Paths
+addpath 'C:\Program Files (x86)\Multi Channel Systems\MC_Rack\MCStreamSupport\Matlab\meatools\mcintfac'
+addpath 'C:\Users\45c\Documents\MATLAB\Prelim\'
+addpath 'C:\Users\45c\Documents\MATLAB\MCS_daq\'
+addpath 'C:\Users\45c\Documents\MATLAB\MCS_daq\SpikeExtraction\'
+
+%Load Data
+
+file = datastrm('D:\MC_Rack Data\Set1\24.mcd');
+
+
+t_start = 0 ;
+t_stop  = 20;
+t_step  = 1 ;
+
+t = 0 ;
+
+DS.GUI.ChannelView  = ChannelView ;
+
+DS.ProcessInfo = ProcessInfo_Setup ;
+
+while(t<t_stop)
+    startend = [t (t+t_step)];
+    Data = nextdata(file,'streamname',streamname,'startend',startend*1e3) ;
+    Data = Data.data ;
+    Data = reshape(Data,120,numel(D)/120);
+    
+    
+    zf = DS.ProcessInfo.zf ;
+    [Data,zf] = filter(DS.ProcessInfo.filterparam.b,DS.ProcessInfo.filterparam.a,(double(Data))',zf);
+    DS.ProcessInfo.zf= zf;
+    DS.ProcessInfo = ProcessData(Data,DS);    
+    
+    handles  = guidata(DS.GUI.ChannelView);
+    handles.DrawWaveForms(Data,handles,10,DS.ProcessInfo.Thresholds);
+                 
+    t = t + t_step;
+end
+
+
