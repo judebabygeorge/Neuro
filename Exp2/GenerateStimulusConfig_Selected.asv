@@ -1,0 +1,53 @@
+function StimConfig = GenerateStimulusConfig_Selected(StimConfig,SelectedPatterns)
+
+%Number of Configs required = Number of Electrodes
+%p different patterns , r electrodes at a time
+
+ maxPatterns = 127 ; 
+ 
+ p = numel(SelectedPatterns);
+ StimConfig.Patterns = zeros(r,p);
+ StimConfig.PatternDelay  = zeros(size(StimConfig.Patterns)); 
+ 
+ D1 = 2*StimConfig.PulseInterval - StimConfig.PulseInterval_x ;
+ D2 = StimConfig.PulseInterval_x;
+ 
+ 
+for j=1:56
+%          StimConfig.Patterns(1, (j-1)*2 + 1) = ElectrodeSets(O(j,1));
+%          StimConfig.Patterns(2, (j-1)*2 + 1) = ElectrodeSets(O(j,2));
+%          
+%          StimConfig.PatternDelay(1, (j-1)*2 + 1) = D1(1);
+%          StimConfig.PatternDelay(2, (j-1)*2 + 1) = D2(1);
+%          
+%          StimConfig.Patterns(1, (j-1)*2 + 2) = 8 + j;
+%          StimConfig.Patterns(2, (j-1)*2 + 2) = 0;
+%          StimConfig.PatternDelay(1, (j-1)*2 + 2) = StimConfig.PulseInterval;
+%          StimConfig.PatternDelay(2, (j-1)*2 + 2) = StimConfig.PulseInterval;
+         
+         StimConfig.Patterns(1, j) = 8 + j;
+         StimConfig.Patterns(2, j) = 0;
+         StimConfig.PatternDelay(1, j) = StimConfig.PulseInterval;
+         StimConfig.PatternDelay(2, j) = StimConfig.PulseInterval;
+end
+for j=(p-8+1):p
+     StimConfig.Patterns(1, j) = j - (p-8);
+     StimConfig.Patterns(2, j) = 0;
+     StimConfig.PatternDelay(1, j) = StimConfig.PulseInterval;
+     StimConfig.PatternDelay(2, j) = StimConfig.PulseInterval;
+end
+ 
+ nSeq      = floor(maxPatterns/p) ;   
+ StimConfig.PatternSequence = zeros(1,p*nSeq) ;  
+ for i=1:nSeq
+     StimConfig.PatternSequence(((i-1)*p +1):i*p) = randperm(p) ;
+ end
+ 
+ 
+ StimConfig.r              = r    ;
+ StimConfig.p              = p    ;
+ StimConfig.nSeq           = nSeq ;
+ StimConfig.DecodeWeights  = []   ;
+ StimConfig.nLoop          = 1    ;
+end
+

@@ -1,0 +1,66 @@
+
+pp=[2 5 6 7];
+a = [find(StimConfig.Patterns(2,:) == pp(1));find(StimConfig.Patterns(2,:) == pp(2));find(StimConfig.Patterns(2,:) == pp(3));find(StimConfig.Patterns(2,:) == pp(4))];
+a = a';
+I = reshape(a,[1 numel(a)]);
+
+X = PatternData.Pattern;
+
+X(X<50*50) =nan;
+X(StimConfig.Electrodes,:,:)=nan;
+
+PFiring = ones(size(X));
+PFiring(isnan(X))=0 ;
+
+Pf = mean(PFiring,3);
+
+% a  = sum(Pf) ;
+% [~,I] = sort(a,'descend');
+% T = mean(PatternData.Pattern,3) ;
+
+if(numel(I)>16)
+    I = I(1:16);
+end
+
+%I=I2;
+%a(I) 
+
+
+h = PatternView ;
+
+hO  = guidata(h);  
+for i=1:numel(I)
+    
+    Mark = zeros(120,1);
+    
+    %Vis  = ones(size(Pf,1),1);
+    %Act  = ones(size(Vis));
+    
+%    E = PatternData.Config{1}.Patterns(:,I(i));
+    
+%     for j=1:numel(E)
+%       Eid = find(PatternData.Config{1}.Config.EConfig(:,E(j))==1) ;
+%       Mark(Eid) = 1 ;
+%     end
+    
+    if(1)
+        Vis  = Pf(:,I(i));
+        Act  = ones(size(Vis));
+    else
+        Act = B(:,i) ;
+        Vis(Act>1) = 0 ;
+        Act(Act>1) = 0 ;
+        Act  = 1- Act  ;
+    end
+    
+    hO.ShowElectrodeActivity(hO,i,[Act Vis], Mark);
+end
+
+X = PatternData.Pattern;
+X(X>50*50) =nan;
+X(StimConfig.Electrodes,:,:)=nan;
+
+for i = 1:4
+    id=find(StimConfig.Patterns(1,:) == pp(1));
+    X
+end

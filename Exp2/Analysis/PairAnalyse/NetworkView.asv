@@ -1,0 +1,178 @@
+function hO = NetworkView(Prob)
+
+h = figure('Position' , [50 50 800 800],'Units','pixel');
+hO.h = h ;
+P1 = get(h,'Position');
+a = load('ChannelMap.mat') ;
+hO.ChannelMapping     = a.ChannelMapping;
+
+s = [400 400];
+
+ for j = 1:2
+        for k=1:2
+             l = 2-j+1;
+             P  = [(0 + (k-1)*s(1)) (0 + (l-1)*s(2)) s(1) s(2)] ;
+             P(1:2:3) = P(1:2:3)./P1(3);
+             P(2:2:4) = P(2:2:4)./P1(4);
+             h = axes('Position',P);
+             hO.NetAxis{j,k}.ax=h;
+             hO.NetAxis{j,k}.Points=CreateAxis(h,hO.ChannelMapping.row,hO.ChannelMapping.col);
+        end
+ end
+  HL = [];
+  
+%  th = 0.7;
+
+%  for i=1:numel(Prob)
+%      if(~isempty(HL))
+%          for j=1:numel(HL)
+%              delete(HL(j));
+%          end
+%          HL = [];
+%      end
+%      SrcEl = Prob{i}.El;
+%      Net = (Prob{i}.PPre>th);
+%      h = DrawNetwork( hO.NetAxis{1,1}.ax,SrcEl,Net,'-',hO.ChannelMapping.row,hO.ChannelMapping.col)  ;   
+%      HL = [HL h];
+%      
+%      
+%      Net = (Prob{i}.PPost>th);
+%      h = DrawNetwork( hO.NetAxis{1,2}.ax,SrcEl,Net,'-.',hO.ChannelMapping.row,hO.ChannelMapping.col);
+%      HL = [HL h];
+%      
+%      Net = (abs(Prob{i}.PPre- Prob{i}.PPost)>th);
+%      h = DrawNetwork( hO.NetAxis{2,1}.ax,SrcEl,Net,'-',hO.ChannelMapping.row,hO.ChannelMapping.col);
+%      HL = [HL h];
+%      
+%      Net = (Prob{i}.PPre>0.8)&(Prob{i}.PPost>th) ;
+%      h = DrawNetwork( hO.NetAxis{2,2}.ax,SrcEl,Net,'-',hO.ChannelMapping.row,hO.ChannelMapping.col);
+%      HL = [HL h];
+%      pause(3);
+%  end
+
+    %An Electrode alone can cause firing
+    P = zeros(120,numel(Prob));
+    E1 = zeros(1,numel(Prob));
+    th = 0.7;
+    for i=1:numel(Prob)
+        E1(i) = Prob{i}.El;
+        P1 = sum((Prob{i}.PPre > th),2)==size(Prob{i}.PPre,2);
+        P2 = sum((Prob{i}.PPost > th),2)==size(Prob{i}.PPost,2);
+        P(:,i) = P1 + P2 == 2;
+    end    
+    P_Alone=P;
+    DrawNetwork(hO.NetAxis{1,1}.ax,E1,P_Alone,'-',hO.ChannelMapping.row,hO.ChannelMapping.col);
+%     
+%     %An Electrode Can cause firing with another
+%     P = zeros(120,numel(Prob));
+%     E2 = zeros(1,numel(Prob));
+%     th = 0.8;
+%     for i=1:numel(Prob)
+%         E2(i) = Prob{i}.El;
+%         P1= zeros(120,1);
+%         P2= zeros(120,1);
+%         for j=1:size(Prob{i}.PPre,2)
+%             k = E1==Prob{i}.ElPre(j);           
+%             P1 = P1 + (Prob{i}.PPre(:,j) > th)&(P_Alone(:,i)==0)&(P_Alone(:,k)==0);
+%             k = E1==Prob{i}.ElPost(j);
+%             P2 = P2 + (Prob{i}.PPost(:,j) > th)&(P_Alone(:,i)==0)&(P_Alone(:,k)==0);
+%         end
+%         P(:,i) = (P1 + P2) > 0 ;       
+%     end   
+%     P_Comb = P;
+%     HL = DrawNetwork(hO.NetAxis{1,2}.ax,E2,P_Comb,'-',hO.ChannelMapping.row,hO.ChannelMapping.col);
+% %    HL=[];
+% %     for i=1:size(P_Comb,2)
+% %         HL =delete_lines(HL);
+% %         HL = DrawNetwork(hO.NetAxis{1,2}.ax,E2(i),P_Comb(:,i),'-',hO.ChannelMapping.row,hO.ChannelMapping.col);
+% %         pause(3)
+% %     end
+% 
+%     HL=[];
+%     
+%A required in conjugation with another.Another colored by a different
+%color
+    th = 0.8;
+    for i=1:numel(Prob)
+        P = zeros(120,size(Prob{i}.PPre,2));
+        E2 = zeros(2,size(Prob{i}.PPre,2));
+        for j=1:size(Prob{i}.PPre,2)
+            k = E1==Prob{i}.ElPre(j);           
+            P1 =  (Prob{i}.PPre(:,j) > th)&(P_Alone(:,i)==0)&(P_Alone(:,k)==0);
+            k = E1==Prob{i}.ElPost(j);
+            P2 =  (Prob{i}.PPost(:,j) > th)&(P_Alone(:,i)==0)&(P_Alone(:,k)==0);
+            P(:,j) = (P1==1)&(P2==0)&(~((P1==1)(P2==1)));
+        end     
+        
+        %delete_lines(HL);
+        HL = DrawNetwork(hO.NetAxis{2,1}.ax,Prob{i}.El,P,'-',hO.ChannelMapping.row,hO.ChannelMapping.col);
+        %pause(3)
+    end   
+   
+
+
+
+end
+function HL =delete_lines(HL)
+     if(~isempty(HL))
+         for j=1:numel(HL)
+             delete(HL(j));
+         end
+         HL = [];
+     end
+end
+function HL = DrawNetwork(h,SrcEl,Net,style,row,col)
+    HL = [];
+    nLines = 0;
+    Colors = 'brgmcyk';
+    
+    if(numel(SrcEl) ~= size(Net,2))
+        SrcEl = ones(1,size(Net,2))*SrcEl(1);
+    end
+    for i=1:size(Net,2)
+       s = [col(SrcEl(i)) row(SrcEl(i))];
+       I=find(Net(:,i)>0);
+       for j=1:numel(I)
+           e = [col(I(j)) row(I(j))];
+           c = (s + e)/2           ;
+           r = sum((c - s).^2)^0.5;
+           
+           th = atan2(s(2)-c(2),s(1) -c(1)) + (pi/2);           
+           c  = c + (1 - 2*rem(j,2))*(1+i)*r*[cos(th) sin(th)];           
+           r = sum((c - s).^2)^0.5;
+           th = [atan2(s(2)-c(2),s(1) -c(1)) atan2(e(2)-c(2),e(1) -c(1))];
+           
+%            if(abs(th(2)-th(1)>pi))
+%               th*180/pi
+%            end
+           if(th(2)>th(1))
+               th = th(1):pi/20:th(2);
+           else
+               th = th(2):pi/20:th(1);
+           end
+           
+           
+           X = c(1) + r*cos(th);Y=c(2) + r*sin(th);
+%            X=[s(1) e(1)];Y=[s(2) e(2)];
+           hl = line('XData',X,'YData',Y,'parent',h,'LineStyle',style,'Color',Colors(1+rem(i-1,numel(Colors))),'LineWidth',2);
+           nLines =nLines+1;
+           HL(nLines)=hl;
+       end
+    end
+end
+
+function hPoints = CreateAxis(h,row,col)
+    
+    r  = 7.5            ;
+    c  = [6.5 6.5]    ;  
+    m = numel(row) ;
+    cl = [44 147 225]/255 ;
+    CData = repmat(cl,m,1);
+    hPoints   = scatter(h,col,row,ones(size(col))*30,CData,'filled');
+    
+    set(h,'XLimMode' , 'Manual' , 'YLimMode' , 'Manual' , 'ZLimMode' , 'Manual' );
+    set(h,'XLim',[c(1)-r-1 c(1) + r + 1],'YLim',[c(2)-r-1 c(2) + r + 1],'YDir','reverse');
+    set(h,'XTick', [],'YTick',[], 'ZTick',[]);
+    set(h,'XTickMode', 'Manual', 'YTickMode', 'Manual', 'ZTickMode', 'Manual');
+    set(h,'XColor',[1 1 1], 'YColor',[1 1 1], 'ZColor',[1 1 1])
+end

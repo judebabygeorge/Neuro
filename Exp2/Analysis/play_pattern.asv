@@ -1,0 +1,14 @@
+function [ output_args ] = play_patterns( Patterns ,  )
+%PLAY_PATTERN Summary of this function goes here
+%   Detailed explanation goes here
+
+h = PatternView ;
+hO  = guidata(h);  
+
+len  = min(32,size(Patterns,2)) ;
+
+Vis  = Pf(:,(id));
+Act  = ones(size(Vis))*0;    
+hO.ShowElectrodeActivity(hO,id,[Act Vis], Mark);
+
+end

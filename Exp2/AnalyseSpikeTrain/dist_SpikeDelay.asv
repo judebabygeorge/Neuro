@@ -1,0 +1,17 @@
+function d = dist_SpikeDelay( XI,XJ )
+%DIST_FS Summary of this function goes here
+%   Detailed explanation goes here
+
+
+d = bsxfun(@minus,XI,XJ) ;
+mask = bsxfun(@or,isnan(d),isinf(d));
+
+disp(['a1 ' num2str(size(XI))])
+disp(['a2 ' num2str(size(XJ))])
+disp(['d ' num2str(size(d))])
+disp([' ' num2str(size(XJ))])
+d = 1 - (sum((abs(d(mask==0)) < 3),2)/numel(XI));
+disp(['a3 ' num2str(size(d))])
+
+end
+

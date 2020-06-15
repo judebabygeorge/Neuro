@@ -1,0 +1,206 @@
+function Out = SigElectrode_InterestingCombResponse(PatternData)
+
+    V = 1:1:112;   
+    %Extract The relevent patterns
+    Patterns = PatternData.Pattern;
+    PatternConfig = PatternData.StimConfig;
+    %Patterns = Patterns(:,V,:);
+
+    E = PatternData.StimConfig.Electrodes(1,1:8) ;
+    E = reshape(E,[1 numel(E)]);
+    E = E(E~=0);
+    Patterns(E,:,:)=nan;
+    DecodeCheckWindow= 100;
+    Patterns(Patterns<5*50) = nan;
+    Patterns(Patterns>DecodeCheckWindow*50) = nan;
+    
+    P = ones(size(Patterns));
+    P(isnan(Patterns))=0;
+    P = mean(P,3);
+    P = P(:,V);
+    Q = reshape(P,[120 4 28]);
+    
+ if(0)   
+    Q(Q>=0.5) = 1;
+    Q(Q<0.5) = 0;
+
+    Q = Q(:,1,:) + 2*(Q(:,2,:)) + 4*(Q(:,3,:)) + 8*(Q(:,4,:));
+    Q= reshape(Q,[120,28]);
+
+    RR = zeros(size(Q));
+    %merit = [0 1 1 0 1 0 1 0 1 0 1 0 0 0 1 0];
+    %merit = [0 1 1 0 1 0 1 0 1 0 1 0 0 0 1 1];
+    merit = [0 2 2 0 1 0 1 0 2 0 1 0 0 0 2 0];
+    for i=1:16
+        RR(Q==i-1)=merit(i);
+    end
+ end    
+ if(1)
+    QQ = zeros(size(Q,1),1,size(Q,3));
+    for i=1:size(QQ,2)-1
+        for j=i+1:size(QQ,2)
+            QQ  = QQ + (abs(Q(:,1,:) - Q(:,2,:)) > 0.4) + (abs(Q(:,3,:) - Q(:,4,:)) > 0.4);
+        end
+    end
+    RR = reshape(QQ,[120,28]);
+ end
+    display(sum(RR))
+    
+    B = CreateBarGraphDisplay(4,2,3,[4 80]);
+    
+%     %% Viewing Responses at an electrode for different delay and order of pairing
+%     for i=1:size(RR,2)
+%         E = find(RR(:,i)>0);
+%         x = numel(E);
+%         idx = 0;
+%         while(x>0)
+%             if(x>=4)
+%                 y = E(idx+1:idx+4);
+%                 x = x - 4;
+%                 idx = idx+4;
+%             else
+%                 y = E(idx+1:idx+x);
+%                 x = 0;                
+%             end
+%             display(Q(y,i)')             
+%             
+%             ShowSpikeTimes_Comb(B,Patterns,PatternConfig,y,i);           
+%             waitforbuttonpress ;
+%         end
+%     end
+
+    %% View Responses at electrode of related patterns
+    
+    
+    Pt = PatternData.StimConfig.Patterns(:,1:4:end);
+    Out = [];
+    for i=1:6
+        for j=i+1:7
+            %Find The possible prediction combination
+            k = find((Pt(1,:) == Pt(2,i)) & (Pt(2,:) == Pt(2,j)));
+            Pid = [i j k];
+            %Find The electrodes on which prediction can be done
+            E = find((RR(:,i)>0)&((RR(:,j)>0)));
+            %display(['Pattern : ' num2str(Pid) ' E : ' num2str(E')])
+            for l=1:numel(E)
+                %display(Q(E(l),Pid))
+                Out = [Out;[Q(E(l),Pid) E(l) Pid]];                
+                %ShowSpikeTimes_Comb_2(B,Patterns,PatternConfig,E(l),Pid)
+                %waitforbuttonpress ;
+            end
+            
+        end
+    end
+    
+    
+    x = Out(:,1)*16 + Out(:,2);
+    [~,m,~] = unique(x);
+    
+    %Sort according to frequently occuring inputs
+    %Number of time the particular combiation of
+    %Output codes assigned occur
+    n =zeros(size(m));
+    for i=1:numel(m)
+        n(i)= sum(x==x(m(i)));
+    end
+    
+    [~,i] = sort(n,'descend');
+    m = m(i);
+    
+    %Show the input and output
+    for i=1:numel(m)
+      I = Out(Out(:,1)==Out(m(i),1) & Out(:,2)==Out(m(i),2),:)   ;
+      for j=1:size(I,1)
+          I(j,:)
+          eid = I(j,4);
+          pid =I(j,5:7);
+          x=[];
+          for k=1:numel(pid)
+              x=[x;P(eid,(pid(k)-1)*4+1:(pid(k)-1)*4+4)];
+          end
+          display(x);
+          
+          ShowSpikeTimes_Comb_2(B,Patterns,PatternConfig,eid,pid)
+          waitforbuttonpress ;
+      end
+    end
+
+
+end
+
+
+function ShowSpikeTimes_Comb(B,Patterns,PatternConfig,E,Pid)
+    %Different Electrodes for same pattern
+    %Clear display
+ 
+    
+    clear_BarGraphdisplay(B);
+    
+    for i=1:numel(E)
+        for j=1:3
+            for k=1:2                
+                if(j==3)
+                    p = (Pid-1)*4 +  1;
+                    p = PatternConfig.Patterns(k,p)+112;
+                    if(size(Patterns,2)<p)
+                        p = 0;
+                    end
+                else
+                    p = (Pid-1)*4 + (k-1)*2 +(2-j) + 1;
+                end
+                
+                if(p ~= 0)                    
+                    t = reshape(Patterns(E(i),p,:),[45 1])/50; 
+                    [n,~] = hist(B.BarAxis{i,j,k}.ax,t,B.x);                
+                    set(B.BarAxis{i,j,k}.bh,'YData',n); 
+
+                    P=sum(~isnan(t))/numel(t);
+                    tm = mean(t(~isnan(t)));
+                    stim  = GetPatternDescription(PatternConfig,p);
+                    s =sprintf('P=%1.1f,T_m = %2.1f ms  (%s)',P,tm,stim);
+                    set(B.BarAxis{i,j,k}.hl,'String',s);
+                end
+            end
+            
+        end
+    end    
+   
+end
+
+function ShowSpikeTimes_Comb_2(B,Patterns,PatternConfig,E,Pid)
+    %Same Electrode for different Patterns
+    %Clear display
+    clear_BarGraphdisplay(B);
+    for i=1:numel(Pid)        
+        for j=1:3
+            for k=1:2
+                if(j==3)
+                    p = (Pid(i)-1)*4 +  1;
+                    p = PatternConfig.Patterns(k,p)+112;
+                    if(size(Patterns,2)<p)
+                        p = 0;
+                    end
+                else
+                    p = (Pid(i)-1)*4 + (k-1)*2 +(2-j) + 1;
+                end
+                
+                if(p ~= 0)
+                    t = reshape(Patterns(E,p,:),[45 1])/50; 
+                    [n,~] = hist(B.BarAxis{i,j,k}.ax,t,B.x);                
+                    set(B.BarAxis{i,j,k}.bh,'YData',n);
+
+                    P=sum(~isnan(t))/numel(t);
+                    tm = mean(t(~isnan(t)));
+                    stim  = GetPatternDescription(PatternConfig,p);
+                    s =sprintf('P=%1.1f,T_m = %2.1f ms  (%s)',P,tm,stim);
+                    set(B.BarAxis{i,j,k}.hl,'String',s);
+                end
+                
+            end
+        end
+    end       
+end
+
+
+
+

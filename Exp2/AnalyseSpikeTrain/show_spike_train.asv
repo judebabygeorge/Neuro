@@ -1,0 +1,7 @@
+function show_spike_train( P , Eid )
+%SHOW_SPIKE_TRAIN Summary of this function goes here
+%   Detailed explanation goes here
+
+
+end
+

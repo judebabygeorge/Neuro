@@ -1,0 +1,215 @@
+function varargout = TransistorSignalView(varargin)
+% CHANNELVIEW MATLAB code for TransistorSignalView.fig
+%      CHANNELVIEW, by itself, creates a new CHANNELVIEW or raises the existing
+%      singleton*.
+%
+%      H = CHANNELVIEW returns the handle to a new CHANNELVIEW or the handle to
+%      the existing singleton*.
+%
+%      CHANNELVIEW('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in CHANNELVIEW.M with the given input arguments.
+%
+%      CHANNELVIEW('Property','Value',...) creates a new CHANNELVIEW or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before TransistorSignalView_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to TransistorSignalView_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help TransistorSignalView
+
+% Last Modified by GUIDE v2.5 08-Jan-2013 13:57:42
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @TransistorSignalView_OpeningFcn, ...
+                   'gui_OutputFcn',  @TransistorSignalView_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% --- Executes just before TransistorSignalView is made visible.
+function TransistorSignalView_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to TransistorSignalView (see VARARGIN)
+
+% Choose default command line output for TransistorSignalView
+
+handles.output = hObject;
+P = get(hObject,'Position');
+P(1:2) = [175 100];
+set(hObject,'Position',P);
+
+handles.DrawWaveForms = @DrawWaveForms;
+handles.DrawSpikeSegments = @DrawSpikeSegments;
+handles.MarkSpikeTimes    = @MarkSpikeTimes;
+
+%a = load('ChannelMap.mat') ;
+a = load('ChannelMapMEA60.mat') ;
+handles.ChannelMapping     = a.ChannelMapping;
+handles.ChannelsToDraw = handles.ChannelMapping.nCh ;
+
+
+handles.SetupAxis = @SetupAxis;
+handles = SetupAxis(handles,GenerateExpConfigs());
+
+%set(hObject,'WindowButtonMotionFcn', @axis_action)
+set(hObject,'WindowScrollWheelFcn', @axis_action)
+% Update handles structure
+guidata(hObject, handles);
+
+function handles = SetupAxis(handles,Config)
+
+hObject = handles.output;
+figure(hObject)
+%handles.Scale = [-1000 1000]*0.25*.25 ; 
+handles.Scale = [-1000 1000]*5; 
+handles.Config = Config;
+
+nAxis = numel(Config);
+nAxis = min(10,nAxis);
+
+P1 = get(hObject,'Position');
+axHeight = P1(4)/(nAxis);
+axHeight = min(P1(4)/2,axHeight);
+
+P  = [80 P1(4)-axHeight*0.95 800 axHeight*0.9] ;
+P(1:2:3) = P(1:2:3)./P1(3);
+P(2:2:4) = P(2:2:4)./P1(4);
+axHeight=axHeight/P1(4);
+
+ChannelList{numel(Config)} = [];
+for i=1:numel(Config)
+    ChannelList{i} = Config{i}.Descriptor;
+end
+
+handles.ChannelList=ChannelList;
+handles.ChannelsSelected = zeros(nAxis,1);
+
+for i=1:nAxis
+    
+    h = axes('parent', hObject,'Position',P,'ButtonDownFcn',@axis_action);
+    handles.ChAxes{i}.ha = h;
+    set(h,  'XLimMode','Manual', 'YLimMode','Manual')
+    set(h, 'XLim' , [0 1] )            
+    set(h, 'YLim' , handles.Scale)
+    hl =  line(ones(1,10),ones(1,10),'Visible','off');
+    set(h,'UserData',[i]);
+    
+    handles.ChAxes{i}.hl = hl ; 
+    handles.ChAxes{i}.LineId = 1;
+    set(h,'Children',hl); 
+
+    handles.ChAxes{i}.Scale = handles.Scale;
+    
+    %set(h,'XTick',[]);
+    %set(h,'YTick',[]);
+    set(h,'YLimMode','Manual','XLim',[0 1],'YLim',handles.ChAxes{i}.Scale);
+    
+    handles.ChannelsSelected(i) = i;
+    handles.ChAxes{i}.ht = text(0.05,handles.ChAxes{i}.Scale(2)*0.75,ChannelList{handles.ChannelsSelected(i)},'FontWeight','bold','FontSize',8); 
+    
+        
+    hUp = uicontrol('Style', 'pushbutton', 'String', 'Up',...
+        'Position', [20 P(2)*P1(4)+50 40 40],...
+        'Callback', @cmdScale_Callback); 
+    handles.ChAxes{i}.hUp = hUp;    
+    set(hUp,'Tag',['cmdUp' num2str(i)]);
+    set(hUp,'UserData',[i 2]);
+    
+    hDown = uicontrol('Style', 'pushbutton', 'String', 'Down',...
+        'Position', [20 P(2)*P1(4) 40 40],...
+        'Callback', @cmdScale_Callback); 
+    handles.ChAxes{i}.hUp = hUp;    
+    set(hDown,'Tag',['cmdDown' num2str(i)]);
+    set(hDown,'UserData',[i 0.5]);
+    
+    hChSel = uicontrol('Style', 'popupmenu', 'String',ChannelList,'Value',i,...
+        'Position', [20 P(2)*P1(4) + 100 60 20],...
+        'Callback', @cmdChannelSelect); 
+    handles.ChAxes{i}.hChSel = hChSel;    
+    set(hChSel,'Tag',['popChannels' num2str(i)]);
+    set(hChSel,'UserData',i);
+    P(2) = P(2) - axHeight ;    
+
+end
+
+function axis_action(hObject, eventdata)
+   % A =  get(hObject,'UserData')
+    eventdata
+    get(hObject,'UserData')
+function cmdChannelSelect(hObject, eventdata)
+    A =  get(hObject,'UserData');
+    AxID = A(1);
+    val = get(hObject,'Value');
+    
+    handles = guidata(hObject);
+    handles.ChannelsSelected(AxID) = val;
+    set(handles.ChAxes{AxID}.ht,'String',handles.ChannelList{handles.ChannelsSelected(AxID)});
+    
+    guidata(hObject, handles);
+    
+function cmdScale_Callback(hObject, eventdata)
+
+    A =  get(hObject,'UserData');
+    AxID = A(1);
+    
+    handles = guidata(hObject);
+    handles.ChAxes{AxID}.Scale = handles.ChAxes{AxID}.Scale*A(2) ;
+ 
+    h =handles.ChAxes{AxID}.ha ;
+    
+    set(h,'YLimMode','Manual','XLim',[0 1],'YLim', handles.ChAxes{AxID}.Scale);  
+    set(handles.ChAxes{AxID}.ht,'Position',[0.05 handles.ChAxes{AxID}.Scale(2)*0.75]);
+
+    guidata(hObject, handles);
+
+% --- Outputs from this function are returned to the command line.
+function varargout = TransistorSignalView_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+       
+
+function DrawWaveForms(Y,handles,dowsample,~)
+
+  samples  = size(Y,1);
+  
+  idx      = 1:dowsample:samples ;
+  t        = idx./samples;
+  
+  Scale = (0.812*2e5) ; %uV / max
+  Scale = Scale/(2^15-1);  %uV/div;
+  for i=1:numel(handles.ChannelsSelected)                      
+      hl = handles.ChAxes{i}.hl(1); 
+      h = handles.ChAxes{i}.ha;
+      %Possible SpeedUp No need to set this all time
+      Chid = handles.Config{handles.ChannelsSelected(i)}.ChannelId;
+      set(hl,'XData',t,'YData',Scale.*Y(idx,Chid),'Visible','on');
+      
+     % set(h,'XTick',[]);
+     % set(h,'YTick',[]);
+  end

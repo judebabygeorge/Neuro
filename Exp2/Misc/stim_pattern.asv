@@ -1,0 +1,14 @@
+
+
+O = npermutek(1:3,3);
+
+figure ;
+hold on ;
+
+nP = size(O,1);
+nE = size(O,2);
+for i=1:nP
+    for j=1:nE
+        scatter(O(i,j),(nP+1)*i)
+    end
+end

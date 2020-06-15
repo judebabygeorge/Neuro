@@ -1,0 +1,18 @@
+
+d = zeros(120,120);
+loc = [ChannelMapping.row ChannelMapping.col];
+for i=1:120
+    x = bsxfun(@minus,loc,loc(i,:));
+    x = sum(x.^2,2).^0.5;
+    d(:,i) = 1./x ;
+end
+
+P = PatternData.Pattern;
+
+for i=1:120
+    P(:,i,:) = bsxfun(@times , P(:,i,:) , d(:,i));
+end
+
+P = P(~isnan(P));
+P = P(~
+hist(reshape(P,[numel(P) 1]))

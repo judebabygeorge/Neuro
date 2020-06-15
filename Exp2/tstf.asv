@@ -1,0 +1,4 @@
+
+
+P = PatternData.Pattern(:,Config.DecodeTask.StimConfig.PatternId,:);
+W = Config.DecodeTask.StimConfig.DecodeWeights

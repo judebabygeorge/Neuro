@@ -1,0 +1,22 @@
+
+Culture = 'G05012015A';
+%DIV = {'DIV28','DIV29','DIV30','DIV31'} ;
+DIV = {'DIV37','DIV38'} ;
+
+cd('.)
+check_overnight_change
+Z1 = Z(25,:); Z1 = Z1>0.06;
+y=X{1}.X(25,Z1,:);
+y = reshape(y,[4 24]);
+plot(mean(y))
+yyy =y;
+OverDaysState
+y=X{1}.X(25,Z1,:);
+plot(mean(y))
+y = reshape(y,[4 24]);
+plot(mean(y))
+yyy =y;
+yyy = mean(yyy);
+
+cd('.\StateDependentProcessing')
+OverDaysState
