@@ -44,16 +44,25 @@ Data structure stored
 The Data is stored in matFile in a structure called PatternData.
 The main fields of this Structure are
 1. Pattern [n_electrodes  x maxSpikes x n_patterns x n_Trials]
+
 Each element is a time of occurrence of spike at the electrode post stimulus in a 100ms window (maxSpikes recorded is 5 i.e. upto 5 spikes post stimulus is recorded for each electrode). This matrix contains the spike data for n_patterns used in the experiment and ntrials repeated.
+
 2. StimConfig
 This contains the details of the Stimulus pulses applied. The fields are
+
 2.1 Electrodes :   
 The electrodes used for stimulation. This can either be single electrodes or a set of electrodes 
+
 2.2 Patterns :  
 Stimulation Pattern with a matrix containing sequence of electrodes used for stimulation
+
 2.3  PatternDelay :   
 This contains the delay between firing of each electrode in the Pattern described by previous structure
+
 2.4  PatternInterval :    
  Delay between application of different patterns	   
+ 
 2.5  PatternSequence :   
-Patterns in the previous array are presented in a random order to the culture. This structure captures the actual order in which patterns were presented
+Patterns in the previous array are presented in a random order to the culture. 
+This structure captures the actual order in which patterns were presented
+
