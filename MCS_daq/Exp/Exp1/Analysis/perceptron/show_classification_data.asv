@@ -1,0 +1,5 @@
+
+
+h = PatternView ;
+hO  = guidata(h);
+

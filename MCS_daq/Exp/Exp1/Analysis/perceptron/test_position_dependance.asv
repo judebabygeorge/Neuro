@@ -1,0 +1,18 @@
+
+
+P = PatternData.Pattern ;
+
+
+h = PatternView ;
+Electrode = 1   ;
+
+
+for i=1:32
+  pos = find(PatternData.StimConfig.Patterns(:,i)==Electrode);
+  pos = []
+end
+
+
+
+
+

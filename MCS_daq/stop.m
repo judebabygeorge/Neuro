@@ -1,0 +1,3 @@
+
+delete(lh)
+close all

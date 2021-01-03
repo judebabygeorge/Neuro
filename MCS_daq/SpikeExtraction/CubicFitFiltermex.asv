@@ -1,0 +1,159 @@
+#include "mex.h"
+#include <math.h>
+#include <stdio.h>
+
+
+
+
+/* Performs curve fitting on signal to filter */
+
+/* Inputs : data (MXN Matrix with M Electrodes , N Samples)
+          : N    Half Width of filter
+          : S    appropriate elements for scaling
+ *Output  : F    FilteredData
+ *       
+*/
+void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
+    int  i, j,  numSamples,numElectrodes;
+    int  N;
+    double  *data,  *filtData, *S;
+    double * W , * Wold; 
+    
+    double *N1,*N2;
+    
+    double a1,a2,b1,b2,c1,c2,c;
+    
+    numSamples    = mxGetM(prhs[0]) ; // gets numer of samples 
+    numElectrodes = mxGetN(prhs[0]) ; // Numeber of electrodes
+    data          = mxGetPr(prhs[0]); // Input data to be filtered     
+    N = (int)mxGetScalar(prhs[1])   ; // Half-width of filter */
+    
+    S  = mxGetPr(prhs[2]); /* S Inverse (i.e., S') */    
+    
+    /* Create matrix for filtered data */
+    plhs[0] = mxCreateDoubleMatrix(numSamples,numElectrodes, mxREAL);
+    filtData = mxGetPr(plhs[0]);
+    
+    //Check transpose 
+    for(i = 0 ; i < numSamples ;i++){
+        for(j = 0 ; j < numElectrodes ; j++){
+              filtData[j*numSamples + i] = data[i*numElectrodes+j];           
+        }
+    }
+    
+    //Fitting is possile if there are more than 2N samples
+    if(numSamples > 2*N){
+        //Fitting starts at N+1 th sample
+        //And Completes at numSample - N
+
+        //So fill the start and end with zeros
+       for(j=0;j<numElectrodes;j++){
+            for (i = 0 ; i < N;i++ ){
+                filtData[j*numSamples + i] = 0;
+            } 
+            for (i = numSamples  - N ; i < numSamples;i++ ){
+                filtData[j*numSamples + i] = 0;
+            } 
+        }
+        
+        W    = (double *)calloc(3*numElectrodes,sizeof(double));
+        Wold = (double *)calloc(2*numElectrodes,sizeof(double));
+        
+        N1   = (double *)calloc(2*N+1,sizeof(double));
+        N2   = (double *)calloc(2*N+1,sizeof(double));
+        
+        for(i = 0 , j = -N ; i < 2*N + 1 ;i++,j++){
+            N1[i] = j   ;
+            N2[i] = j*j ;
+        }
+        //Initialize W
+        /*
+        for(i=0;i<(2*N+1);i++){
+            for(j = 0 ; j < numElectrodes ; j++){
+                W[3*j + 0]+=       data[i*numElectrodes+j];
+                W[3*j + 1]+= N1[i]*data[i*numElectrodes+j];
+                W[3*j + 2]+= N2[i]*data[i*numElectrodes+j];                   
+              //  mexPrintf("%f %f %f: %f %f %f\n",data[i*numElectrodes+j],N1[i],N2[i],W[0],W[1],W[2]);
+            }
+           
+        }
+        */
+        for(j = 0 ; j < numElectrodes ; j++){
+            for(i=0;i<(2*N+1);i++){            
+                W[3*j + 0]+=       data[j*numSamples+i];
+                W[3*j + 1]+= N1[i]*data[j*numSamples+i];
+                W[3*j + 2]+= N2[i]*data[j*numSamples+i];                   
+              //  mexPrintf("%f %f %f: %f %f %f\n",data[i*numElectrodes+j],N1[i],N2[i],W[0],W[1],W[2]);
+            }
+           
+        }
+       // mexPrintf("%f %f %f\n",W[0],W[1],W[2]);
+        
+        //Calculate the first sample
+           
+        for(j=0,i=N;j<numElectrodes;j++){
+           filtData[j*numSamples + N] =  data[i*numElectrodes+j] - (W[3*j + 0]*S[0] + W[3*j + 2]*S[1]) ; 
+        }
+        
+        //Recursivly find other samples
+        a1 = (-N-1)     ;
+        a2 = N  ;
+        b1 = a1*a1 ;
+        b2 = a2*a2 ;
+        /*
+        for(i=N+1 ; i < numSamples  - N ; i++){
+            for(j = 0 ; j < numElectrodes ; j++){
+                Wold[2*j + 0] = W[3*j + 0]    ;
+                Wold[2*j + 1] = W[3*j + 1]    ;
+                
+                c1          = data[(i-N-1)*numElectrodes+j] ;
+                c2          = data[(i+N)*numElectrodes+j]   ;
+                c           = data[i*numElectrodes+j]      ;
+                        
+                W[3*j + 0]  =  Wold[2*j + 0] - c1 + c2 ;
+                W[3*j + 1]  = -Wold[2*j + 0] + Wold[2*j + 1] -a1*c1 + a2*c2 ;
+                W[3*j + 2]  =  Wold[2*j + 0] - 2*Wold[2*j + 1] + W[3*j + 2] - b1*c1 + b2*c2 ;
+                
+                //if(i<120)
+                //mexPrintf("%f %f %f\n",W[0],W[1],W[2]);
+                
+                filtData[j*numSamples + i] = c - (W[3*j + 0]*S[0] + W[3*j + 2]*S[1]) ; 
+            }
+        }
+        */
+         
+         for(j = 0 ; j < numElectrodes ; j++){
+            for(i=N+1 ; i < numSamples  - N ; i++){
+                Wold[2*j + 0] = W[3*j + 0]    ;
+                Wold[2*j + 1] = W[3*j + 1]    ;
+                
+                c1          = data[(i-N-1)+j*numSamples] ;
+                c2          = data[(i+N)+j*numSamples]   ;
+                c           = data[i +j*numSamples]      ;
+                        
+                W[3*j + 0]  =  Wold[2*j + 0] - c1 + c2 ;
+                W[3*j + 1]  = -Wold[2*j + 0] + Wold[2*j + 1] -a1*c1 + a2*c2 ;
+                W[3*j + 2]  =  Wold[2*j + 0] - 2*Wold[2*j + 1] + W[3*j + 2] - b1*c1 + b2*c2 ;
+                
+                //if(i<120)
+                //mexPrintf("%f %f %f\n",W[0],W[1],W[2]);
+                
+                filtData[j*numSamples + i] = c - (W[3*j + 0]*S[0] + W[3*j + 2]*S[1]) ; 
+            }
+        }
+        
+        free(N1);
+        free(N2);
+        free(W);
+        free(Wold);
+    }
+    else{ 
+     //Fill everything with zero
+        for(i = 0 ; i < numSamples ;i++){
+           for(j = 0 ; j < numElectrodes ; j++){
+              filtData[j*numSamples + i] = 0;           
+           }
+        }
+    }
+    
+}

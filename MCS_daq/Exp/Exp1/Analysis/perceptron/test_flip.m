@@ -1,0 +1,113 @@
+
+P = PatternData.Pattern;
+E = PatternData.StimConfig.Electrodes(1,1:8) ;
+E = reshape(E,[1 numel(E)]);
+E = E(E~=0);
+P(E,:,:)=nan;
+P(P<5*50) = nan;
+%P(P>25*50) = nan; 
+
+%[ 10(14) 15(32) 20(38) 25(40) 30(36) 35(31) 40(6) 45(10) 50(12) 55(7)]
+%[25(0) 50(2) 100(3) 150(4) -0]
+X = ones(size(P)) ;
+X(isnan(P)) = 0 ;
+
+%SelectedPatterns = (1:1:56)*2;
+%SelectedPatterns = [1 3 4 5 7 8 9 10 11 12 14 18 19 20 23]+24*0;
+SelectedPatterns = 1:1:40;
+
+Y = X(:,SelectedPatterns,:) ;
+nClasses = size(Y,2);
+%nClasses = 1;
+t = zeros(nClasses,size(Y,2),size(Y,3));
+ for i=1:nClasses
+   t(i,i,:) = 1;
+ end
+ 
+% %Now Do some pre-process
+% Pf = mean(Y,3) ;
+% Pf(Pf<0.5) = 0 ;
+% Pf(Pf>0.4) = 1 ;
+
+% for i=1:size(X,3)
+%  Y(:,:,i) = Y(:,:,i).*Pf;
+% end
+
+nSamples = size(Y,3); 
+%nTrain   = round(nSamples*0.5);
+nTrain   = 15;
+%seq      = 1:1:nSamples ; 
+seq      = randperm(nSamples);
+
+%CrossValidation
+%k = 5 ;
+
+
+TrainSamples = seq(1:nTrain);
+%TrainSamples = seq;
+CheckSamples = seq(nTrain+1:end);
+
+
+C = 16
+
+
+
+%% Creating vectors
+x  = ones([size(Y,1)+1 size(Y,2),size(Y,3)]);
+x(1:size(Y,1),:,:)  = Y;
+x = x(:,:,TrainSamples);
+%tt = t(:,:,TrainSamples);
+
+ Pf = mean(x,3); 
+ Pf(Pf>0.7) = 1 ;
+ Pf(Pf<0.99) = 0 ;
+ Pf = sum(Pf,2) ;
+ Pf(Pf>0) = 1 ;
+ 
+ %x = bsxfun(@times,x,Pf);
+ 
+% for i=1:size(x,3)
+%     x(:,:,i) = x(:,:,i).*Pf;
+% end
+
+
+%x = reshape(x,size(x,1),size(x,2)*size(x,3));
+%tt = reshape(tt,size(tt,1),size(tt,2)*size(tt,3));
+
+
+[nE,W] = perceptron_get_weights_svm(x,C);
+
+model = nE;
+
+x  = ones([size(Y,1)+1 size(Y,2),size(Y,3)]);
+x(1:size(Y,1),:,:)  = Y;
+x = x(:,:,CheckSamples);
+tt = t(:,:,CheckSamples);
+
+%W = W.*Pf;
+% Pf = mean(x,3);
+% Pf(Pf<0.7) = 0 ;
+% Pf(Pf>0.4) = 1 ;
+%  for i=1:size(x,3)
+%      x(:,:,i) = x(:,:,i).*Pf;
+%  end
+% x = bsxfun(@times,x,Pf);
+x = reshape(x,size(x,1),size(x,2)*size(x,3));
+tt = reshape(tt,size(tt,1),size(tt,2)*size(tt,3));
+%Calculate Classification success
+O = W'*x ;
+y = (O>0);
+ %Absense of firing
+a = (tt==1)&(y==0);
+%Incorret firing
+b = (tt==0)&(y==1);
+
+a = sum(a,2) ; b = sum(b,2);
+sb = sum(tt==1,2)./sum(tt==0,2);
+nE = a + b.*sb ;
+
+nX = [a b];
+
+nSamples = sum(tt,2);
+nE = nE./nSamples;
+display([num2str(sum(nE < 0.3)) '/' num2str(numel(nE))])

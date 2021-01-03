@@ -1,0 +1,32 @@
+function [estM,fval] = estimate_model_2(D)
+
+    b  = zeros(D.nInputs,2);
+ 
+    
+    %Initialize model 
+    b(:,1)=0.5;%x(:,3)=0;    
+    X = [D.P(:) D.t(:)];
+    y = zeros(size(X,1),1);
+ 
+    b = b(:);
+    b = nlinfit(X,y,@model_calc,b);
+    
+    estM = reshape(b,[numel(b)/2 2]);
+    function y = model_calc(b,X)
+        %Calculate predicted output
+        M = reshape(b,[numel(b)/2 2]);
+        
+        [P,t] = CalculateModelOutput(M,D.I,D.d) ; 
+        
+        %Calculate Cost function to minimize              
+        y = CalculateModelError(X,P,t);
+    end
+    
+end
+function y = CalculateModelError(X,P,t)
+        Pe = abs(P-reshape(X(:,1),size(P))).^2;
+        Pe = Pe + (P>1)*100;        
+        te = (abs(t-reshape(X(:,2),size(t))).^2).*reshape(X(:,1),size(P));
+        y  = sum(Pe(:)) + sum(te(te(:)>0)) ;
+        y  = 1*y;
+end

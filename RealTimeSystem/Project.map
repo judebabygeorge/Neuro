@@ -1,0 +1,532 @@
+******************************************************************************
+               TMS320C6x Linker PC v7.4.2                      
+******************************************************************************
+>> Linked Sun Jun 01 23:30:48 2014
+
+OUTPUT FILE NAME:   <bin\RealTimeSystem.out>
+ENTRY POINT SYMBOL: "_c_int00"  address: 0082b400
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  L2                    00800000   000f0000  0002b8d7  000c4729  RWIX
+  L1P                   00e00000   00008000  00000000  00008000  RWIX
+  L1D                   00f00000   00008000  00000000  00008000  RWIX
+  DDR                   e0000000   10000000  003d0900  0fc2f700  RWIX
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.data      0    00800000    00000000     UNINITIALIZED
+
+.far       0    00800000    0001b82b     UNINITIALIZED
+                  00800000    0000fdb4     OutputDecoder.obj (.far)
+                  0080fdb4    00000004     --HOLE--
+                  0080fdb8    00005b50     global.obj (.far)
+                  00815908    00002c10     SendData.obj (.far)
+                  00818518    00001420     StimPatterns.obj (.far)
+                  00819938    00000ca0     SpikeDetect.obj (.far)
+                  0081a5d8    00000818     Stim.obj (.far)
+                  0081adf0    00000608     MEA21_lib.obj (.far)
+                  0081b3f8    0000041c     StimTrain.obj (.far)
+                  0081b814    0000000c     rts64plus.lib : exit.obj (.far)
+                  0081b820    0000000b     main.obj (.far)
+
+.stack     0    0081b830    0000a000     UNINITIALIZED
+                  0081b830    00000008     rts64plus.lib : boot.obj (.stack)
+                  0081b838    00009ff8     --HOLE--
+
+.text      0    00825840    00005d20     
+                  00825840    000010e0     MEA21_lib.obj (.text)
+                  00826920    00001060     Stim.obj (.text)
+                  00827980    00000ba0     main.obj (.text)
+                  00828520    000009e0     OutputDecoder.obj (.text)
+                  00828f00    000008a0     SpikeDetect.obj (.text)
+                  008297a0    000005c0     SendData.obj (.text)
+                  00829d60    00000400     irq.obj (.text:retain)
+                  0082a160    00000340     StimPatterns.obj (.text)
+                  0082a4a0    000002e0     rts64plus.lib : addf.obj (.text:__addf)
+                  0082a780    00000200     StimTrain.obj (.text)
+                  0082a980    00000200     rts64plus.lib : mpyf.obj (.text:__mpyf)
+                  0082ab80    00000160     RobotComm.obj (.text)
+                  0082ace0    000000e0     rts64plus.lib : memset.obj (.text:_memset)
+                  0082adc0    000000e0     timer.obj (.text)
+                  0082aea0    000000c0     FindThreshold.obj (.text)
+                  0082af60    000000c0     rts64plus.lib : autoinit.obj (.text:__auto_init)
+                  0082b020    000000c0                   : exit.obj (.text:_exit)
+                  0082b0e0    000000a0                   : remu.obj (.text:__remu)
+                  0082b180    000000a0                   : cpy_tbl.obj (.text:_copy_in)
+                  0082b220    000000a0                   : memcpy64.obj (.text:_memcpy)
+                  0082b2c0    00000080                   : cmpf.obj (.text:__cmpf)
+                  0082b340    00000060                   : cpp_init.obj (.text:___TI_cpp_init)
+                  0082b3a0    00000060                   : frcmpyf.obj (.text:__frcmpyf)
+                  0082b400    00000060                   : boot.obj (.text:_c_int00)
+                  0082b460    00000040                   : args_main.obj (.text:__args_main)
+                  0082b4a0    00000040                   : fltuf.obj (.text:__fltuf)
+                  0082b4e0    00000040                   : strasg.obj (.text:__strasgi_64plus)
+                  0082b520    00000020                   : exit.obj (.text:_abort)
+                  0082b540    00000020     intvecs.obj (.text)
+
+.cinit     0    0082b560    0000009c     
+                  0082b560    0000002c     rts64plus.lib : exit.obj (.cinit)
+                  0082b58c    00000004     --HOLE-- [fill = 0]
+                  0082b590    00000024     main.obj (.cinit)
+                  0082b5b4    00000004     --HOLE-- [fill = 0]
+                  0082b5b8    0000001c     irq.obj (.cinit)
+                  0082b5d4    00000004     --HOLE-- [fill = 0]
+                  0082b5d8    0000000c     MEA21_lib.obj (.cinit)
+                  0082b5e4    00000004     --HOLE-- [fill = 0]
+                  0082b5e8    0000000c     RobotComm.obj (.cinit)
+                  0082b5f4    00000004     --HOLE-- [fill = 0]
+                  0082b5f8    00000004     (.pad.cinit) [fill = 0]
+
+.bss       0    0082b5fc    00000084     UNINITIALIZED
+                  0082b5fc    00000044     global.obj (.bss)
+                  0082b640    00000010     OutputDecoder.obj (.bss)
+                  0082b650    0000000c     irq.obj (.bss)
+                  0082b65c    0000000c     main.obj (.bss)
+                  0082b668    00000008     SendData.obj (.bss)
+                  0082b670    00000004     FindThreshold.obj (.bss)
+                  0082b674    00000004     MEA21_lib.obj (.bss)
+                  0082b678    00000004     RobotComm.obj (.bss)
+                  0082b67c    00000004     SpikeDetect.obj (.bss)
+
+.switch    0    0082b680    0000006c     
+                  0082b680    00000048     main.obj (.switch:_ExecuteCommand)
+                  0082b6c8    00000014     main.obj (.switch:_filter_update)
+                  0082b6dc    00000010     main.obj (.switch:_main)
+
+.intvecs   0    0082b800    00000200     
+                  0082b800    00000200     intvecs.obj (.intvecs)
+
+.dataddr   0    e0000000    003d0900     UNINITIALIZED
+                  e0000000    003d0900     global.obj (.dataddr)
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address    name
+--------   ----
+0082b5fc   $bss
+0082b5fc   .bss
+00800000   .data
+00825840   .text
+0082b520   C$$EXIT
+0082b630   _ADCDataShift
+008269d0   _AddDataPoint
+00826ac0   _AddEndVector
+00826a74   _AddLoop
+008296e8   _AddToSpikeList
+00800780   _ChannelWeights
+00826944   _ClearChannel
+0082aea0   _CopyDataToInternal
+00829c60   _CopyDataToSendBuffer
+008292e4   _CopyToSpikeSegment
+008158b0   _DAC_select
+0082b610   _DataMode
+008158d0   _Debug_Data
+0082b648   _DecoderCheck
+0082b64c   _DecoderCheckWindow
+0082b644   _DecoderOutputValid
+00800000   _DecoderState
+0080fba8   _Decoder_Iex
+0080fca8   _Decoder_Iinh
+008081a8   _Decoder_SynapseWeights
+0080faa8   _Decoder_V
+0080fda8   _Decoder_d_tau
+0082b631   _EnableAmpBlanking
+0082b620   _ExectueCommand_flag
+00827c48   _ExecuteCommand
+0082b638   _ExecutionMode
+0082662c   _MEA21_init
+0081adf0   _MeaData
+00827934   _ModifyRegister
+0081aff8   _MonitorData
+00818518   _PatternBuffer
+00815a88   _RecBuffer
+008296b0   _RemoveTopFromSpikeList
+0082aca4   _RobotComm_Sensor
+0082ac18   _RobotComm_Setup
+0082ab80   _RobotComm_Trigger
+0082b628   _RobotComm_flag
+0082b62c   _RobotStimEnable
+00815948   _SendBuffer
+00829cac   _SendDataBuffer
+0082b66c   _SendDataCount
+00829bac   _SendDataDMA
+00829a8c   _SendData_CopyDataFromStoreBuffer
+00815908   _SendData_DMAPARAMSET
+0082b668   _SendData_EvId
+00829a6c   _SendData_GetAvailableSpace
+00829954   _SendData_StoreToBuffer
+00829698   _SendSpikeBuffer
+00829390   _SendSpikeSegment
+008294ec   _SendSpikeSegments
+008293cc   _SendSpikeSegments2
+008265c0   _SetMonitorSize
+00826920   _SetSegment
+00827410   _Set_Segment
+008158f8   _SpikeChannel
+00819cf8   _SpikeData
+0081a0b8   _SpikeData_Compressed
+00829100   _SpikeDetect
+00828f84   _SpikeDetect_Setup
+0082b624   _StimCheck_flag
+0082a280   _StimPatternSequence_Check
+0082b618   _StimPatternSequence_Enabled
+0082a248   _StimPatternSequence_LoadPatterBuffer
+0082a20c   _StimPatternSequence_LoadPatternSequence
+0082a160   _StimPatternSequence_Start
+0082b614   _StimSequence_Enabled
+008158f0   _StimStatus
+0082a8f8   _StimTrain_Setup
+0082a7b0   _StimTrain_Step
+0082a780   _StimTrain_Trigger
+0082b63c   _StimTrain_flag
+00827930   _Stim_BlankElectrodes
+0082b61c   _Stim_BlankingCounter
+008277d8   _Stim_CheckSequence
+00826c68   _Stim_LoadChannelSB_T1
+00826bf0   _Stim_LoadChannelSB_T2
+00826ae8   _Stim_LoadChannel_T1
+0082696c   _Stim_LoadChannel_T2
+0082768c   _Stim_LoadElectrodeConfig
+00827600   _Stim_LoadPattern
+008275a0   _Stim_LoadStimSequenceList
+0082702c   _Stim_SetElectrodeConfig
+00827488   _Stim_SetupStimGen
+008272f8   _Stim_SetupStimGen0
+00827174   _Stim_SetupTrigger
+0082716c   _Stim_StartBlanking
+00827108   _Stim_StartSequence
+00827100   _Stim_StopSequence
+00827084   _Stim_Trigger
+008158a8   _StimulusEnable
+0082b670   _ThresholdMode
+00826e40   _UpLoadPatternToHS
+00825830   __STACK_END
+0000a000   __STACK_SIZE
+00000001   __TI_args_main
+0082b340   ___TI_cpp_init
+0081b81c   ___TI_enable_exit_profile_output
+ffffffff   ___TI_pprof_out_hndl
+ffffffff   ___TI_prof_data_size
+ffffffff   ___TI_prof_data_start
+ffffffff   ___binit__
+0082b5fc   ___bss__
+ffffffff   ___c_args__
+0082b560   ___cinit__
+00800000   ___data__
+00800000   ___edata__
+0082b680   ___end__
+0082b560   ___etext__
+ffffffff   ___pinit__
+00825840   ___text__
+0082a4a0   __addf
+0082b460   __args_main
+0082af60   __auto_init
+0082b0e0   __c6xabi_remu
+0082b4e0   __c6xabi_strasgi_64plus
+0081b814   __cleanup_ptr
+0082b2c0   __cmpf
+0081b818   __dtors_ptr
+0082b4a0   __fltuf
+0082b3a0   __frcmpyf
+0082a980   __mpyf
+0082b0e0   __remu
+0081b830   __stack
+0082b4e0   __strasgi_64plus
+0082b520   _abort
+0080fdb8   _adc_intern_0
+0080fea8   _adc_intern_1
+0082b5fc   _adc_intern_id
+0082b400   _c_int00
+00828e20   _calculate_decoder_output
+00828d60   _compress_decoder_out
+0082b180   _copy_in
+0082b608   _current_time
+e0000000   _ddr_data
+0082b604   _deadtime
+0082b674   _devRegs
+0081b820   _dsp_version
+0081a510   _dummy_segment
+008158c0   _elec_config
+0082b020   _exit
+00827b70   _filter_setup
+00827980   _filter_update
+0082b634   _frame_sync
+0082b65c   _gpioRegs
+008297a0   _init_SendDataDMA
+008265a4   _init_cache
+00826370   _init_ddr2
+00828c7c   _init_decoder
+00826054   _init_dma
+00825e60   _init_emifa
+00825db0   _init_gpio
+00825ce4   _init_irq
+00825a84   _init_pll1
+00825a80   _init_pll2
+008258c8   _init_qdma
+00825840   _init_timer
+0082b800   _intcVectorTable
+0082a144   _interrupt4
+0082a13c   _interrupt5
+00829df8   _interrupt6
+00829dac   _interrupt7
+00829d60   _interrupt8
+0082b60c   _last_timer_count
+00827bf4   _load_command_data
+008281e8   _main
+0082b220   _memcpy
+0082ace0   _memset
+0082b640   _nDecoders
+0082b67c   _nSpikes
+00828c0c   _reset_decoder_state
+00828520   _scale_array
+00828ba4   _scale_array_2
+00828f48   _setCommonThresholdParams
+00828f00   _setThresholdParams
+00828ae8   _setup_decoder
+00828a14   _setup_decoder_2
+008288e4   _sort_id
+00819938   _spd_LastCross
+00819b18   _spd_ThresholdData
+0081a448   _spike_segment
+0082b600   _threshold
+0082ae0c   _timer_setup
+0082add0   _timer_tic
+0082adc0   _timer_toc
+00808080   _uDecoderOutput
+00808180   _uDecoderOutput_compressed
+00815d08   _uSendDataStore
+0081a130   _uSpikeList
+0081b3f8   _uStimTrainExecute
+0081b40c   _uStimTrainSequence
+00819518   _u_Stim_PatternSequence
+0081a5d8   _u_Stim_SequenceList
+00828868   _update_decoder_state
+00828590   _update_decoder_state_2
+ffffffff   binit
+0082b560   cinit
+00800000   edata
+0082b680   end
+0082b560   etext
+ffffffff   pinit
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address    name
+--------   ----
+00000001   __TI_args_main
+0000a000   __STACK_SIZE
+00800000   .data
+00800000   _DecoderState
+00800000   ___data__
+00800000   ___edata__
+00800000   edata
+00800780   _ChannelWeights
+00808080   _uDecoderOutput
+00808180   _uDecoderOutput_compressed
+008081a8   _Decoder_SynapseWeights
+0080faa8   _Decoder_V
+0080fba8   _Decoder_Iex
+0080fca8   _Decoder_Iinh
+0080fda8   _Decoder_d_tau
+0080fdb8   _adc_intern_0
+0080fea8   _adc_intern_1
+008158a8   _StimulusEnable
+008158b0   _DAC_select
+008158c0   _elec_config
+008158d0   _Debug_Data
+008158f0   _StimStatus
+008158f8   _SpikeChannel
+00815908   _SendData_DMAPARAMSET
+00815948   _SendBuffer
+00815a88   _RecBuffer
+00815d08   _uSendDataStore
+00818518   _PatternBuffer
+00819518   _u_Stim_PatternSequence
+00819938   _spd_LastCross
+00819b18   _spd_ThresholdData
+00819cf8   _SpikeData
+0081a0b8   _SpikeData_Compressed
+0081a130   _uSpikeList
+0081a448   _spike_segment
+0081a510   _dummy_segment
+0081a5d8   _u_Stim_SequenceList
+0081adf0   _MeaData
+0081aff8   _MonitorData
+0081b3f8   _uStimTrainExecute
+0081b40c   _uStimTrainSequence
+0081b814   __cleanup_ptr
+0081b818   __dtors_ptr
+0081b81c   ___TI_enable_exit_profile_output
+0081b820   _dsp_version
+0081b830   __stack
+00825830   __STACK_END
+00825840   .text
+00825840   ___text__
+00825840   _init_timer
+008258c8   _init_qdma
+00825a80   _init_pll2
+00825a84   _init_pll1
+00825ce4   _init_irq
+00825db0   _init_gpio
+00825e60   _init_emifa
+00826054   _init_dma
+00826370   _init_ddr2
+008265a4   _init_cache
+008265c0   _SetMonitorSize
+0082662c   _MEA21_init
+00826920   _SetSegment
+00826944   _ClearChannel
+0082696c   _Stim_LoadChannel_T2
+008269d0   _AddDataPoint
+00826a74   _AddLoop
+00826ac0   _AddEndVector
+00826ae8   _Stim_LoadChannel_T1
+00826bf0   _Stim_LoadChannelSB_T2
+00826c68   _Stim_LoadChannelSB_T1
+00826e40   _UpLoadPatternToHS
+0082702c   _Stim_SetElectrodeConfig
+00827084   _Stim_Trigger
+00827100   _Stim_StopSequence
+00827108   _Stim_StartSequence
+0082716c   _Stim_StartBlanking
+00827174   _Stim_SetupTrigger
+008272f8   _Stim_SetupStimGen0
+00827410   _Set_Segment
+00827488   _Stim_SetupStimGen
+008275a0   _Stim_LoadStimSequenceList
+00827600   _Stim_LoadPattern
+0082768c   _Stim_LoadElectrodeConfig
+008277d8   _Stim_CheckSequence
+00827930   _Stim_BlankElectrodes
+00827934   _ModifyRegister
+00827980   _filter_update
+00827b70   _filter_setup
+00827bf4   _load_command_data
+00827c48   _ExecuteCommand
+008281e8   _main
+00828520   _scale_array
+00828590   _update_decoder_state_2
+00828868   _update_decoder_state
+008288e4   _sort_id
+00828a14   _setup_decoder_2
+00828ae8   _setup_decoder
+00828ba4   _scale_array_2
+00828c0c   _reset_decoder_state
+00828c7c   _init_decoder
+00828d60   _compress_decoder_out
+00828e20   _calculate_decoder_output
+00828f00   _setThresholdParams
+00828f48   _setCommonThresholdParams
+00828f84   _SpikeDetect_Setup
+00829100   _SpikeDetect
+008292e4   _CopyToSpikeSegment
+00829390   _SendSpikeSegment
+008293cc   _SendSpikeSegments2
+008294ec   _SendSpikeSegments
+00829698   _SendSpikeBuffer
+008296b0   _RemoveTopFromSpikeList
+008296e8   _AddToSpikeList
+008297a0   _init_SendDataDMA
+00829954   _SendData_StoreToBuffer
+00829a6c   _SendData_GetAvailableSpace
+00829a8c   _SendData_CopyDataFromStoreBuffer
+00829bac   _SendDataDMA
+00829c60   _CopyDataToSendBuffer
+00829cac   _SendDataBuffer
+00829d60   _interrupt8
+00829dac   _interrupt7
+00829df8   _interrupt6
+0082a13c   _interrupt5
+0082a144   _interrupt4
+0082a160   _StimPatternSequence_Start
+0082a20c   _StimPatternSequence_LoadPatternSequence
+0082a248   _StimPatternSequence_LoadPatterBuffer
+0082a280   _StimPatternSequence_Check
+0082a4a0   __addf
+0082a780   _StimTrain_Trigger
+0082a7b0   _StimTrain_Step
+0082a8f8   _StimTrain_Setup
+0082a980   __mpyf
+0082ab80   _RobotComm_Trigger
+0082ac18   _RobotComm_Setup
+0082aca4   _RobotComm_Sensor
+0082ace0   _memset
+0082adc0   _timer_toc
+0082add0   _timer_tic
+0082ae0c   _timer_setup
+0082aea0   _CopyDataToInternal
+0082af60   __auto_init
+0082b020   _exit
+0082b0e0   __c6xabi_remu
+0082b0e0   __remu
+0082b180   _copy_in
+0082b220   _memcpy
+0082b2c0   __cmpf
+0082b340   ___TI_cpp_init
+0082b3a0   __frcmpyf
+0082b400   _c_int00
+0082b460   __args_main
+0082b4a0   __fltuf
+0082b4e0   __c6xabi_strasgi_64plus
+0082b4e0   __strasgi_64plus
+0082b520   C$$EXIT
+0082b520   _abort
+0082b560   ___cinit__
+0082b560   ___etext__
+0082b560   cinit
+0082b560   etext
+0082b5fc   $bss
+0082b5fc   .bss
+0082b5fc   ___bss__
+0082b5fc   _adc_intern_id
+0082b600   _threshold
+0082b604   _deadtime
+0082b608   _current_time
+0082b60c   _last_timer_count
+0082b610   _DataMode
+0082b614   _StimSequence_Enabled
+0082b618   _StimPatternSequence_Enabled
+0082b61c   _Stim_BlankingCounter
+0082b620   _ExectueCommand_flag
+0082b624   _StimCheck_flag
+0082b628   _RobotComm_flag
+0082b62c   _RobotStimEnable
+0082b630   _ADCDataShift
+0082b631   _EnableAmpBlanking
+0082b634   _frame_sync
+0082b638   _ExecutionMode
+0082b63c   _StimTrain_flag
+0082b640   _nDecoders
+0082b644   _DecoderOutputValid
+0082b648   _DecoderCheck
+0082b64c   _DecoderCheckWindow
+0082b65c   _gpioRegs
+0082b668   _SendData_EvId
+0082b66c   _SendDataCount
+0082b670   _ThresholdMode
+0082b674   _devRegs
+0082b67c   _nSpikes
+0082b680   ___end__
+0082b680   end
+0082b800   _intcVectorTable
+e0000000   _ddr_data
+ffffffff   ___TI_pprof_out_hndl
+ffffffff   ___TI_prof_data_size
+ffffffff   ___TI_prof_data_start
+ffffffff   ___binit__
+ffffffff   ___c_args__
+ffffffff   ___pinit__
+ffffffff   binit
+ffffffff   pinit
+
+[205 symbols]

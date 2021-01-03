@@ -1,0 +1,4 @@
+PFiring = ones(size(PatternData.Pattern));
+PFiring(isnan(PatternData.Pattern))=0 ;
+
+Pf = mean(PFiring,3);

@@ -1,0 +1,7 @@
+function a = combine_halfwords(a1,a2)
+
+ a1 = typecast(int16(a1),'uint8')
+ a2 = typecast(int16(a2),'uint8')
+ 
+ a  = typecast([a1 a2],'uint32');
+end

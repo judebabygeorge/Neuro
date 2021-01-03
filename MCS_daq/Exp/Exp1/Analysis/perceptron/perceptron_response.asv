@@ -1,0 +1,13 @@
+
+
+Responses = zeros(size(Y,2) , size(Y,2));
+
+x = reshape(Y,[size(Y,1) size(Y,2)*size(Y,3)]);
+for i=1:size(Y,2)
+    
+    R = Wb(:,i)'*X - b(i) ;
+    
+    R = reshape(R,[1 size(Y,2) size(Y,3)]);
+    
+    R = mean(R,
+end

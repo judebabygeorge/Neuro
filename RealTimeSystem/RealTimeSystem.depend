@@ -1,0 +1,284 @@
+# depslib dependency file v1.0
+1349265510 source:c:\users\45c\firmware\realtimesystem\src\asm\intvecs.asm
+
+1393735756 source:c:\users\45c\firmware\realtimesystem\src\c\findthreshold.c
+	<math.h>
+	"FindThreshold.h"
+
+1352303809 c:\titools\codetools\include\math.h
+	<float.h>
+	<access.h>
+	<elfnames.h>
+	<mathf.h>
+	<mathl.h>
+	<access.h>
+	<unaccess.h>
+
+1352303808 c:\titools\codetools\include\float.h
+
+1352303808 c:\titools\codetools\include\access.h
+	<linkage.h>
+
+1352303809 c:\titools\codetools\include\linkage.h
+
+1352303808 c:\titools\codetools\include\elfnames.h
+
+1352303809 c:\titools\codetools\include\mathf.h
+	<float.h>
+	<math.h>
+	<access.h>
+	<unaccess.h>
+
+1352303809 c:\titools\codetools\include\unaccess.h
+
+1352303809 c:\titools\codetools\include\mathl.h
+	<float.h>
+	<access.h>
+	<math.h>
+	<unaccess.h>
+
+1393734060 c:\users\45c\firmware\realtimesystem\src\headers\findthreshold.h
+	"global.h"
+	"typedef.h"
+	"MEA21_lib.h"
+
+1401512016 c:\users\45c\firmware\realtimesystem\src\headers\global.h
+	<csl.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\csl.h
+	<csl_types.h>
+	<csl_error.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\csl_types.h
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\tistdtypes.h
+
+1349265510 c:\titools\csl\csl_c6455\inc\csl_error.h
+
+1349265510 c:\users\45c\firmware\realtimesystem\src\headers\typedef.h
+
+1366604558 c:\users\45c\firmware\realtimesystem\src\headers\mea21_lib.h
+	<csl_types.h>
+	"global.h"
+
+1401511950 source:c:\users\45c\firmware\realtimesystem\src\c\global.c
+	"MEA21_lib.h"
+
+1401512001 source:c:\users\45c\firmware\realtimesystem\src\c\irq.c
+	<csl.h>
+	<cslr_tmr.h>
+	<cslr_gpio.h>
+	<cslr_chip.h>
+	<cslr_edma3cc.h>
+	<soc.h>
+	<c6x.h>
+	"global.h"
+	"main.h"
+	"timer.h"
+	"FindThreshold.h"
+	"SpikeDetect.h"
+	"SendData.h"
+	"Stim.h"
+	"OutputDecoder.h"
+	"irq.h"
+	"MEA21_lib.h"
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_tmr.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr.h
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_gpio.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_chip.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_edma3cc.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\soc.h
+	<cslr.h>
+
+1352303808 c:\titools\codetools\include\c6x.h
+	"vect.h"
+
+1352303809 c:\titools\codetools\include\vect.h
+	<stdint.h>
+
+1352303809 c:\titools\codetools\include\stdint.h
+
+1366084263 c:\users\45c\firmware\realtimesystem\src\headers\main.h
+	<cslr_dev.h>
+	<cslr_gpio.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_dev.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\users\45c\firmware\realtimesystem\src\headers\irq.h
+
+1367670814 c:\users\45c\firmware\realtimesystem\src\headers\spikedetect.h
+	"global.h"
+	"typedef.h"
+	"FindThreshold.h"
+	"SendData.h"
+
+1366177789 c:\users\45c\firmware\realtimesystem\src\headers\senddata.h
+	"global.h"
+	"typedef.h"
+
+1356277917 c:\users\45c\firmware\realtimesystem\src\headers\timer.h
+
+1401635608 source:c:\users\45c\firmware\realtimesystem\src\c\main.c
+	<stdio.h>
+	<string.h>
+	<cslr_pllc.h>
+	<cslr_gpio.h>
+	<cslr_emifa.h>
+	<cslr_ddr2.h>
+	<cslr_dev.h>
+	<cslr_intc.h>
+	<cslr_chip.h>
+	<cslr_edma3cc.h>
+	<cslr_tmr.h>
+	<soc.h>
+	<math.h>
+	<c6x.h>
+	"global.h"
+	"main.h"
+	"version.h"
+	"MEA21_lib.h"
+	"SendData.h"
+	"SpikeDetect.h"
+	"Stim.h"
+	"StimPatterns.h"
+	"timer.h"
+	"OutputDecoder.h"
+	"RobotComm.h"
+	"StimTrain.h"
+
+1352303809 c:\titools\codetools\include\stdio.h
+	<linkage.h>
+	<stdarg.h>
+
+1352303809 c:\titools\codetools\include\stdarg.h
+
+1352303809 c:\titools\codetools\include\string.h
+	<linkage.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_pllc.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_emifa.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_ddr2.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\titools\csl\csl_c64xplus_intc\inc\cslr_intc.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1349265510 c:\users\45c\firmware\realtimesystem\src\headers\version.h
+
+1366970934 source:c:\users\45c\firmware\realtimesystem\src\c\mea21_lib.c
+	<stdio.h>
+	<string.h>
+	<cslr_pllc.h>
+	<cslr_gpio.h>
+	<cslr_emifa.h>
+	<cslr_ddr2.h>
+	<cslr_dev.h>
+	<cslr_intc.h>
+	<cslr_chip.h>
+	<cslr_edma3cc.h>
+	<cslr_cache.h>
+	<soc.h>
+	<c6x.h>
+	"MEA21_lib.h"
+
+1349265510 c:\titools\csl\csl_c6455\inc\cslr_cache.h
+	<cslr.h>
+	<tistdtypes.h>
+
+1357835865 source:c:\users\45c\firmware\realtimesystem\src\c\neo.c
+	"SpikeDetect.h"
+
+1366972103 source:c:\users\45c\firmware\realtimesystem\src\c\senddata.c
+	<stdio.h>
+	<string.h>
+	<csl.h>
+	<soc.h>
+	<cslr_edma3cc.h>
+	"MEA21_lib.h"
+	"SendData.h"
+
+1368760689 source:c:\users\45c\firmware\realtimesystem\src\c\spikedetect.c
+	"FindThreshold.h"
+	"SpikeDetect.h"
+
+1355847396 source:c:\users\45c\firmware\realtimesystem\src\c\test_func.c
+	"global.h"
+	"typedef.h"
+
+1366956645 source:c:\users\45c\firmware\realtimesystem\src\c\timer.c
+	"global.h"
+	"timer.h"
+	<cslr_tmr.h>
+	<soc.h>
+	<c6x.h>
+
+1393867500 c:\users\45c\firmware\realtimesystem\src\headers\stim.h
+	"global.h"
+	"typedef.h"
+
+1393867566 source:c:\users\45c\firmware\realtimesystem\src\c\stim.c
+	"Stim.h"
+	"MEA21_lib.h"
+
+1394183975 source:c:\users\45c\firmware\realtimesystem\src\c\stimpatterns.c
+	"MEA21_lib.h"
+	"global.h"
+	"Stim.h"
+	"StimPatterns.h"
+	"OutputDecoder.h"
+
+1394011210 c:\users\45c\firmware\realtimesystem\src\headers\stimpatterns.h
+
+1401182798 source:c:\users\45c\firmware\realtimesystem\src\c\outputdecoder.c
+	"MEA21_lib.h"
+	"global.h"
+	"OutputDecoder.h"
+
+1369287098 c:\users\45c\firmware\realtimesystem\src\headers\outputdecoder.h
+
+1388825034 c:\users\45c\firmware\realtimesystem\src\headers\robotcomm.h
+
+1400909186 source:c:\users\45c\firmware\realtimesystem\src\c\robotcomm.c
+	<csl.h>
+	<cslr_tmr.h>
+	<cslr_gpio.h>
+	<cslr_chip.h>
+	<cslr_edma3cc.h>
+	<soc.h>
+	<c6x.h>
+	"MEA21_lib.h"
+	"RobotComm.h"
+
+1401527693 c:\users\45c\firmware\realtimesystem\src\headers\stimtrain.h
+
+1401527739 source:c:\users\45c\firmware\realtimesystem\src\c\stimtrain.c
+	"global.h"
+	"typedef.h"
+	"StimPatterns.h"
+	"StimTrain.h"
+

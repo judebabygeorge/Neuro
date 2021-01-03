@@ -1,0 +1,125 @@
+function varargout = Raster(varargin)
+% RASTER MATLAB code for Raster.fig
+%      RASTER, by itself, creates a new RASTER or raises the existing
+%      singleton*.
+%
+%      H = RASTER returns the handle to a new RASTER or the handle to
+%      the existing singleton*.
+%
+%      RASTER('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in RASTER.M with the given input arguments.
+%
+%      RASTER('Property','Value',...) creates a new RASTER or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before Raster_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to Raster_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help Raster
+
+% Last Modified by GUIDE v2.5 10-Jan-2013 11:26:17
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @Raster_OpeningFcn, ...
+                   'gui_OutputFcn',  @Raster_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% --- Executes just before Raster is made visible.
+function Raster_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to Raster (see VARARGIN)
+
+% Choose default command line output for Raster
+handles.output = hObject;
+
+handles.SetupRaster = @SetupRaster ;
+handles.AddToRaster = @AddToRaster ;
+handles.DrawNetworkActivity = @DrawNetworkActivity;
+
+% Update handles structure
+guidata(hObject, handles);
+
+% UIWAIT makes Raster wait for user response (see UIRESUME)
+% uiwait(handles.figure1);
+
+
+% --- Outputs from this function are returned to the command line.
+function varargout = Raster_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.output;
+
+function SetupRaster(nChannels,handles)
+
+%   figure(handles.output);
+%   h= axes(handles.axes_raster);
+%   hl_rasters =  line(ones(2,nChannels),ones(2,nChannels),'Visible','off');
+%   handles.hl_rasters = hl_rasters ;  
+%   set(h,'Children',hl_rasters);
+%   handles.id = 0 ;
+  
+  %set(handles.axes_raster,'XTick',[]);
+  %set(handles.axes_raster,'YTick',[]);
+  set(handles.axes_raster,'YLimMode','Manual','XLim',[0 10],'YLim', [0 nChannels+1]);
+  set(handles.axes_burst,'YLimMode','Manual','XLim',[0 10],'YLim', [0 nChannels+1]);
+   
+function AddToRaster(SpikeData,handles)
+    
+   nChannels = size(SpikeData.Spikes,2);
+   
+   figure(handles.output);
+   h = handles.axes_raster ;
+   
+   if(SpikeData.Frames==1)
+     cla(h);    
+   end
+   
+   hold(h,'on');
+   for Chid = 1:nChannels
+       %hl = handles.hl_rasters(Chid) ;
+      
+       Z  = double(SpikeData.Spikes(1:SpikeData.Counts(Chid),Chid))/50000;
+       Y  = ones(size(Z))*Chid ;  
+       plot(h,Z,Y,'LineStyle','none','MarkerSize',4,'Marker','o','MarkerFaceColor','k','MarkerEdgeColor','k');
+       %set(hl,'XData',Z,'YData',ones(size(Z))*Chid,'Visible','on','LineStyle','none','MarkerSize',4,'Marker','o','MarkerFaceColor','k','MarkerEdgeColor','k');
+   end
+   hold(h,'off');
+
+ function DrawNetworkActivity(Activity,len,handles)
+     
+   figure(handles.output);
+   h = handles.axes_burst ;
+   
+   t = 1:1:len ;
+   t = t/1000  ;
+   plot(h,t,Activity(1:len));
+   xlim(h,[0 10]);
+     
+     

@@ -1,0 +1,16 @@
+
+P = PatternData.Pattern;
+
+P  = P(:,1:112,:);
+% P  = P(:,113:120,:);
+% for i=1:8
+%     P(E(i),i,:) = 0;
+% end
+
+X = zeros(size(P,1) , size(P,2)*size(P,3) ) ; 
+
+for i=1:size(X,1)
+   X = bsxfun(@minus,P ,P(i,:,:));
+end
+
+

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="RealTimeSystem" />
+		<Option pch_mode="2" />
+		<Option compiler="ti" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/RealTimeSystem.out" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="ti" />
+				<Option use_console_runner="0" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="src/headers" />
+			<Add directory="C:/TITools/CSL/csl_c6455/inc" />
+			<Add directory="C:/TITools/CodeTools/include" />
+			<Add directory="C:/TITools/CSL/csl_c64xplus_intc/inc" />
+		</Compiler>
+		<ExtraCommands>
+			<Add after='postbuild.bat &quot;C:\TITools\CodeTools\bin\hex6x.exe&quot; &quot;RealTimeSystem.out&quot; &quot;RealTimeSystem&quot;' />
+			<Mode after="always" />
+		</ExtraCommands>
+		<Unit filename="src/C/FindThreshold.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/MEA21_lib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/OutputDecoder.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/RobotComm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/SendData.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/SpikeDetect.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/Stim.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/StimPatterns.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/StimTrain.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/global.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/irq.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/C/timer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/asm/intvecs.asm" />
+		<Unit filename="src/headers/FindThreshold.h" />
+		<Unit filename="src/headers/MEA21_lib.h" />
+		<Unit filename="src/headers/OutputDecoder.h" />
+		<Unit filename="src/headers/RobotComm.h" />
+		<Unit filename="src/headers/SendData.h" />
+		<Unit filename="src/headers/SpikeDetect.h" />
+		<Unit filename="src/headers/Stim.h" />
+		<Unit filename="src/headers/StimPatterns.h" />
+		<Unit filename="src/headers/StimTrain.h" />
+		<Unit filename="src/headers/global.h" />
+		<Unit filename="src/headers/irq.h" />
+		<Unit filename="src/headers/main.h" />
+		<Unit filename="src/headers/timer.h" />
+		<Unit filename="src/headers/typedef.h" />
+		<Unit filename="src/headers/version.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

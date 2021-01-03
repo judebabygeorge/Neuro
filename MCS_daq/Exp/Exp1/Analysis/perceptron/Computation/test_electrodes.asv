@@ -1,0 +1,33 @@
+
+
+fr = create_datastream('G:\G09042013A\DIV38\data_PatternCheck_2_250_two_time_seq3.dat');
+
+SpikeTimes = zeros(10000,1) ;
+SpikeCounts = zeros(120,1)  ;
+
+StimPattern =  ;
+
+figure;hold on;
+E = I(1:5);
+Es = 1;
+[b,a]=ellip(2,0.1,40,[300 3000]*2/50e3);
+for i=1:15
+     Ei = E(Es);
+     [Data,SpikeEncoded,StimTrigger] = get_stream(fr,PatternData.FrameNumber(1,StimPattern,i));
+     Data = filter(b,a,Data')';
+     %Data = CubicFitFilter(Data')';
+     [StimConfig StimEvents] = StimDecode(StimTrigger) ;
+     SpikeDecode(SpikeTimes,SpikeCounts,SpikeEncoded);  
+     MarkTime = PatternData.MarkTime(1,StimPattern,i);
+     t = MarkTime:1:(MarkTime + 1000);
+     plot(1:numel(t),Data(Ei,t(1):t(end))+200*i);
+     
+     window  = 200e-3*50000;
+     offset = cumsum(SpikeCounts) ;
+     offset = [1 ; (1 + offset(1:end-1))];
+     times = SpikeTimes(offset(Ei):(offset(Ei)+SpikeCounts(Ei)-1));
+     times = times((times > MarkTime)&(times < (MarkTime + window) ));
+     times = times - MarkTime;
+     %times = PatternData.Pattern(Ei,2*(2*StimPattern-1),i)
+     scatter(times , ones(size(times))*(200*i + 100), 10,'filled','r');
+end    

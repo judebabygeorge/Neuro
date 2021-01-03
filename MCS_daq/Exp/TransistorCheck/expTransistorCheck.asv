@@ -1,0 +1,77 @@
+classdef expTransistorCheck < handle
+    %EXPTRANSISTORCHECK Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties
+           DS 
+           GUI
+           
+           StimParams
+           Config
+    end
+    
+    methods
+        
+        function exp = expTransistorCheck(DS)
+            exp.DS = DS;
+            exp.GUI.main = uiExpTransistorCheck;
+            
+            handles = guidata(exp.GUI.main);
+            handles.exp = exp;
+            guidata(exp.GUI.main,handles);
+            
+            DS.SetTest(exp);
+        end
+        
+        function start(exp)
+            display 'Starting Experiment'
+            
+            %Get the stimulation Parameters
+            h = guidata(exp.DS.GUI.SignalGen);
+            exp.StimParams = h.GetSignalGenParams(h);
+            
+            
+            exp.Config.PatternInterval = 1000;
+            exp.Config.PulseInterval   = 3;
+            exp.Config.Patterns        = [1];
+            exp.Config.PatternDelay    = [1];
+            exp.Config.PatternSequence = [1];
+            exp.Config.nLoop           = 1;
+
+            exp.Config.Electrodes      = zeros(3,1); %Electrodes for the Current Patter
+            for i=1:numel(exp.StimParams.SigAssignConfig)
+                 if exp.StimParams.SignalToElectrodeConfig(i) > 2
+                     E = exp.StimParams.SignalToElectrodeConfig(i) - 2;
+                     exp.Config.Electrodes(E) = 1;
+                 end
+            end
+            
+            
+            %Create And Load StimPatterns
+            display 'Loading Stimulation Waveforms'
+            Array = trGenerateStimulusWaveForm(exp.StimParams,0);
+            SendCommand(exp.DS,4,Array);             
+            %Create And Load StimConfiguration
+            display 'Loading Stimulation Configs'
+            trLoadStimulationElectrodeConfig(exp.DS,exp.StimParams,exp.Config);            
+            
+            exp.DS.StartACQ(0,'');
+        end
+        function start_stimulation(exp)
+            
+            display('Starting Stimulation ')
+            display('-------------------- ')
+            
+            Start     = 0   ;
+            End       = 2*numel(exp.Config.PatternSequence) -1;
+            nLoop     = exp.Config.nLoop ;
+            Trigger   = 9   ;            
+            CurrentTime     = exp.DS.CurrentTime + 2000  ; %Align to Sample Number 2000
+            
+            Start_StimPatternSequence(exp.DS,Start,End,nLoop,Trigger,CurrentTime);            
+        end
+        
+    end
+    
+end
+

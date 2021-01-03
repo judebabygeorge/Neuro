@@ -1,6 +1,0 @@
-C:\Users\45c\Documents\MATLAB\MCS_daq\DAQ_Wrapper\DAQ_MATLAB_Wrapper\DAQ_MATLAB_Wrapper\bin\Release\DAQ_MATLAB_Wrapper.dll
-C:\Users\45c\Documents\MATLAB\MCS_daq\DAQ_Wrapper\DAQ_MATLAB_Wrapper\DAQ_MATLAB_Wrapper\bin\Release\DAQ_MATLAB_Wrapper.pdb
-C:\Users\45c\Documents\MATLAB\MCS_daq\DAQ_Wrapper\DAQ_MATLAB_Wrapper\DAQ_MATLAB_Wrapper\bin\Release\McsUsbNet.dll
-C:\Users\45c\Documents\MATLAB\MCS_daq\DAQ_Wrapper\DAQ_MATLAB_Wrapper\DAQ_MATLAB_Wrapper\obj\Release\ResolveAssemblyReference.cache
-C:\Users\45c\Documents\MATLAB\MCS_daq\DAQ_Wrapper\DAQ_MATLAB_Wrapper\DAQ_MATLAB_Wrapper\obj\Release\DAQ_MATLAB_Wrapper.dll
-C:\Users\45c\Documents\MATLAB\MCS_daq\DAQ_Wrapper\DAQ_MATLAB_Wrapper\DAQ_MATLAB_Wrapper\obj\Release\DAQ_MATLAB_Wrapper.pdb

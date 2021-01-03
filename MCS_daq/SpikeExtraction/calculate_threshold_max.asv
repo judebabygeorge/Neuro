@@ -1,0 +1,58 @@
+function Thresholds = calculate_threshold_max (file,t_start,t_stop)
+
+nC = size(D,2);
+nS = size(D,1);
+
+
+nSplit = ceil(nS/10);
+n = 1:nSplit:nS ;
+
+sd = zeros(numel(n)-1,nC);
+for i=1:numel(n)-1
+ sd(i,:) = median(abs(D(n(i):n(i+1),:)))/0.6745;   
+end
+sd = sort(sd);
+Th = 5*mean(sd(1:5,:));
+
+%Have to calculate mean and sd for all channels using the data in time
+%interval t_start to t_stop 
+
+%Loading of raw data would be done only in t_step
+
+t_step = 1;
+
+cNum = 120;
+
+%Creating the filter
+%[b a] = butter(4,1e3/50e3,'high');
+[b,a]=ellip(2,0.1,40,[300 3000]*2/50e3);
+
+  
+%Use it to calculate sd
+t = t_start ;
+sd = zeros(round(t_stop/t_step),cNum) ;
+id = 1 ;
+
+zf = zeros(max(length(a),length(b))-1,cNum);
+t_bin = 4e-3 ;
+
+n_bin = t_bin/20e-6 ;
+
+while (t<t_stop)
+
+  D  = get_raw_data(file,'Electrode Raw Data 1',[t t + t_step],cNum);
+  D = D.data';
+  [D,zf]  = filter(b,a,D,zf);
+  %D  = filtfilt(b,a,D);
+  D = reshape(D,[n_bin numel(D)/n_bin]) ;
+  D = max(abs(D)) ;
+  D = reshape(D,[numel(D)/cNum cNum]);
+  sd(id,:) = median(D);
+  
+  t  = t + t_step ;
+  id = id + 1;
+end
+sd = sort(sd,1) ;
+sd = mean(sd(1:5,:));
+Thresholds = (sd')*2;
+end

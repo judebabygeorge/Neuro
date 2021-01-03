@@ -1,0 +1,103 @@
+function  DrawAnimationFrame( Animation )
+%DRAWANIMATIONFRAME Summary of this function goes here
+%   Detailed explanation goes here
+
+figure(Animation.h);
+B = CreateBackGround(Animation);
+
+for i=1:10
+    loc = [i i]*0.1 ;
+    angle = (pi/20)*i;
+    state = rem(i,
+    I = DrawButterFly(Animation,loc,angle,state,B);
+    imshow(I);
+    pause(0.5);
+end
+
+
+end
+
+function B = DrawButterFly(Animation,loc,angle,state,B)
+
+ angle = angle*(180/2*pi);
+ im = Animation.ButterFly.States{state}.image ;
+ im = imrotate(im,angle,'bilinear');
+ fSize = size(im);
+ 
+ bSize = size(B);
+
+ loc = [loc(2) loc(1)];    
+ loc = (loc + 1)/2 ;     
+ loc = round(0.9*loc.*bSize(1:2));
+ 
+ start = round(loc - (fSize(1:2)/2)) ;
+ start = max(start,[1 1]);
+    
+ Mask = double((im(:,:,1)>0.9)&(im(:,:,2)>0.9));
+ Mask = imfilter(Mask,Animation.ButterFly.f,'replicate');
+ 
+ iB   = B(start(1):(start(1) + fSize(1)-1),start(2):(start(2) + fSize(2)-1),:);
+ iB   = bsxfun(@times,im,Mask) + bsxfun(@times,iB,1 - Mask);
+ B(start(1):(start(1) + fSize(1)-1),start(2):(start(2) + fSize(2)-1),:)=iB;
+end
+
+function B = CreateBackGround(Animation)
+
+%Load original background
+B = Animation.BackGround ;
+
+%Add Flowers
+
+fSize = size(Animation.Flowers.States{1}.image);
+bSize = size(B);
+
+for i=1:size(Animation.Flowers.locs,1)    
+%for i=1:1  
+    if(Animation.Flowers.visited==1)
+        im = Animation.Flowers.States{2}.image ; 
+    else
+        im = Animation.Flowers.States{1}.image ;
+    end    
+    Mask = 1- Animation.Flowers.Mask ;
+    
+    loc = Animation.Flowers.locs(i,:);
+    %Convert to actual directions of row col
+    %Row is y cordinate
+    loc = [loc(2) loc(1)];    
+    loc = (loc + 1)/2 ;     
+    loc = round(0.9*loc.*bSize(1:2));
+    
+    start = round(loc - (fSize(1:2)/2)) ;
+    start = max(start,[1 1]);
+    
+    iB   = B(start(1):(start(1) + fSize(1)-1),start(2):(start(2) + fSize(2)-1),:);
+    iB   = bsxfun(@times,im,Mask) + bsxfun(@times,iB,1 - Mask);
+    B(start(1):(start(1) + fSize(1)-1),start(2):(start(2) + fSize(2)-1),:)=iB;
+end
+
+%Add Spiders
+fSize = size(Animation.Spiders.States{1}.image);
+for i=1:size(Animation.Spiders.locs,1)    
+%for i=1:1  
+  
+    im = Animation.Spiders.States{1}.image ;
+     
+    Mask = 1- Animation.Spiders.Mask ;
+    
+    loc = Animation.Spiders.locs(i,:);
+    %Convert to actual directions of row col
+    %Row is y cordinate
+    loc = [loc(2) loc(1)];    
+    loc = (loc + 1)/2 ;     
+    loc = round(0.9*loc.*bSize(1:2));
+    
+    start = round(loc - (fSize(1:2)/2)) ;
+    start = max(start,[1 1]);
+    
+    iB   = B(start(1):(start(1) + fSize(1)-1),start(2):(start(2) + fSize(2)-1),:);
+    iB   = bsxfun(@times,im,Mask) + bsxfun(@times,iB,1 - Mask);
+    B(start(1):(start(1) + fSize(1)-1),start(2):(start(2) + fSize(2)-1),:)=iB;
+end
+
+
+end

@@ -1,0 +1,40 @@
+function [Vth E] = train_neuron(V, target)
+
+V = reshape(V,[numel(V) 1]);
+target = reshape(target,size(V));
+
+Th = 0 ;
+
+Vmax    = max(abs(V));
+dVthmin = 0.01*Vmax ;
+dVth    = 0.10*Vmax  ;  
+
+Vth = 0 ;
+
+s = sum(target==1)/sum(target==0) ;
+
+count = 20 ;
+lE = 0 ;
+El = zeros(count,1);
+while(count > 0)
+    
+   %Find Error
+   O  = (V>(Vth + dVth)) ;
+   E1 = sum((O==0)&(target==1));
+   E2 = s*sum((O==1)&(target==0));
+   
+   E = E1 + E2 ; 
+   
+   if(E>lE)
+       dVth = -dVth*0.9 ;
+   else
+       dVth = dVth*1.1;
+   end
+   El(count) -
+   lE = E ;    
+   count = count - 1 ;
+end
+
+end
+
+

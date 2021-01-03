@@ -1,0 +1,73 @@
+
+clear uSYS uDAQ dll lh
+
+setup_paths
+
+
+% Basic System for Data Processing
+% Filtering and Spike Detection &
+% Hardware Control
+Culture = 'C2';
+
+filename = 'C:\Users\45c\Documents\MATLAB\MCS_daq\Exp\Exp2\Data\G09042013A\DIV48\adata_PatternCheck_2_250_two_time_seq3' ;
+uSYS = DAQSys2(1,filename) ;        
+% %Setup Listeners for DAQ Events
+% lh(1) = addlistener(uDAQ,'Port_1_Data_Event',@uSYS.DataAvailable);
+% lh(2) = addlistener(uDAQ,'DeviceStateChange',@uSYS.DeviceStateChange);
+
+
+
+% Interface for running test
+%uExp = exp1(uSYS);
+
+fr = create_datastream('C:\Users\45c\Documents\MATLAB\MCS_daq\Exp\Exp2\Data\G09042013A\DIV48\data_PatternCheck_2_250_two_time_seq3.dat');
+
+Frame = 1 ;
+Frame_stop = fr.Frames ;
+%Frame_stop = 40;
+
+uPlay.Mode = fr.type ;
+uSYS.StartACQ()
+while(Frame <= Frame_stop)
+    
+
+%Acquire Data
+%     startend = [t (t+t_step)];
+%     Data = nextdata(file,'streamname','Electrode Raw Data 1','startend',startend*1e3) ;
+%     Data = Data.data ;
+%     Data = reshape(Data,120,numel(Data)/120);
+%     Data = Data - (2^15);
+    
+    [Data SpikeEncoded StimTrigger] = get_stream(fr,Frame);    
+    display(['Frame Number : ' num2str(Frame)]);
+    %SpikeDecode(uPlay.ProcessInfo.spike_times,uPlay.ProcessInfo.spikeCounts,SpikeEncoded);
+    
+    sender.FrameCount = Frame ;
+    sender.frames_read=50000;
+    sender.Channels   = 80 ;
+    
+    iFrame = int32(zeros(80,50000));
+    Data = int16(Data);
+    Data = reshape(typecast(reshape(Data,[120*50000 1]),'int32'),[60 50000]);
+    
+    iFrame(1,:) = ones(1,50000)*hex2dec('55AA55AA');
+    iFrame(2,:) = ones(1,50000)*80 ;
+    iFrame(3,:) = 1:1:50000 ;
+    iFrame(4,:) =  ones(1,50000)*700;
+    iFrame(5:64,:)   = Data ;
+    iFrame(65:66,:) = int32(StimTrigger);
+    
+    sender.data = iFrame ;
+    tic
+      uSYS.DataAvailable(sender,1);
+    tt = toc ;
+    %display(['Time Spent : ' num2str((tt/1)*100) ' %']);
+%     if(tt<1)
+%      pause(1-tt);
+%     end
+     pause(0.01);
+    Frame = Frame + 1 ;
+end
+
+uSYS.StopACQ;
+

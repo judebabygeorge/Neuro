@@ -1,0 +1,62 @@
+
+Pid = unique(PatternData_RobotCheck.PatternId);
+
+PatternData_RobotCheck.Pattern(PatternData_RobotCheck.Pattern>100*50)= nan;
+
+Patterns   = ones(size(PatternData_RobotCheck.Pattern));
+Patterns(isnan(PatternData_RobotCheck.Pattern)) = 0;
+
+
+P = zeros(size(Patterns,1),numel(Pid));
+for i=1:numel(Pid)
+  P(:,i) = mean(Patterns(:,PatternData_RobotCheck.PatternId==Pid(i)),2);
+  Q{i}.P = Patterns(:,PatternData_RobotCheck.PatternId==Pid(i));
+end
+
+
+h = PatternView ;
+hO  = guidata(h);  
+
+Vis = zeros(size(P,1),1);
+Act  = ones(size(Vis))*0;
+Mark = zeros(size(Act));
+
+
+for i=1:4
+    Vis = P(:,i);
+    hO.ShowElectrodeActivity(hO,i,[Act Vis], Mark);
+end
+
+
+PatternData_Analyse.Pattern(PatternData_Analyse.Pattern>100*50)= nan;
+
+Patterns   = ones(size(PatternData_Analyse.Pattern));
+Patterns(isnan(PatternData_Analyse.Pattern)) = 0;
+
+P = zeros(size(Patterns,1),numel(Pid));
+for i=1:numel(Pid)
+  P(:,i) = mean(Patterns(:,Pid(i),:),3);
+end
+
+for i=1:4
+    Vis = P(:,i);
+    hO.ShowElectrodeActivity(hO,i+8,[Act Vis], Mark);
+end
+
+n= [];
+for i=1:4
+    n = size(Q{i}.P,2);
+end
+n=min(n);
+P=zeros(120,4,n);
+half =floor(n/2);
+for i=1:4    
+    P(:,i,:)= reshape(Q{i}.P(:,1:n),[120 1 n]);
+    Vis = mean(P(:,i,1:half),3);
+    hO.ShowElectrodeActivity(hO,i+16,[Act Vis], Mark);
+    Vis = mean(P(:,i,half+1:f),3);
+    hO.ShowElectrodeActivity(hO,i+16,[Act Vis], Mark);
+end
+
+
+
